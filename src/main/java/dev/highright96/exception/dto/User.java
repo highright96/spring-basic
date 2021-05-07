@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 public class User {
 
     @NotBlank
-    @Size(min = 1, max = 100)
+    @Size(min = 1, max = 10)
     private String name;
 
     @Min(1)
