@@ -1,0 +1,14 @@
+{
+  "name" : "userA",
+  "age" : 20,
+  "cars" : [
+    {
+      "name" : "bmw",
+      "car_number" : "1234"
+    },
+    {
+      "name" : "benz",
+      "car_number" : "1232"
+    }
+  ]
+}
