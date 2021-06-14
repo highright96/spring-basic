@@ -38,7 +38,6 @@ class CalculatorApiControllerTest {
     MockMvc mockMvc;
 
     ObjectMapper objectMapper = new ObjectMapper();
-    ;
 
     @Test
     void sumTest() throws Exception {
