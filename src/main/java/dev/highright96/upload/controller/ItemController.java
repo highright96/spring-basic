@@ -6,16 +6,24 @@ import dev.highright96.upload.dto.ItemForm;
 import dev.highright96.upload.repository.ItemRepository;
 import dev.highright96.upload.service.FileStoreService;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.util.UriUtils;
 
 @Slf4j
 @Controller
@@ -53,5 +61,33 @@ public class ItemController {
         Item item = itemRepository.findById(id);
         model.addAttribute("item", item);
         return "upload/item-view";
+    }
+
+    @ResponseBody
+    @GetMapping("/images/{filename}")
+    public Resource downloadImage(@PathVariable String filename) throws MalformedURLException {
+        return new UrlResource("file:" + fileStoreService.getFullPath(filename));
+    }
+
+    @GetMapping("/attach/{itemId}")
+    public ResponseEntity<Resource> downloadAttach(@PathVariable Long itemId)
+        throws MalformedURLException {
+        Item item = itemRepository.findById(itemId);
+        String storeFileName = item.getAttachFile().getStoreFileName();
+        String uploadFileName = item.getAttachFile().getUploadFileName();
+
+        UrlResource resource = new UrlResource(
+            "file:" + fileStoreService.getFullPath(storeFileName));
+
+        log.info("uploadFileName={}", uploadFileName);
+
+        //한굴, 특수문자가 꺠질 수 있으니 인코딩을 해준다.
+        String encodeUploadFileName = UriUtils.encode(uploadFileName, StandardCharsets.UTF_8);
+        //다운로드를 위한 http 규약 -> 헤더에 CONTENT_DISPOSITION 추가
+        String contentDisposition = "attachment; filename=\"" + encodeUploadFileName + "\"";
+
+        return ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+            .body(resource);
     }
 }
