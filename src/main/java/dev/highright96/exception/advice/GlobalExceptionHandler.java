@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
-@RestControllerAdvice(basePackageClasses = ExceptionApiController.class) /* 특정 클래스로 제한 */
+//@RestControllerAdvice(basePackageClasses = ExceptionApiController.class) /* 특정 클래스로 제한 */
 public class GlobalExceptionHandler {
 
     /*
