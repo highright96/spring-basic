@@ -1,5 +1,6 @@
 package dev.highright96.upload.controller;
 
+import dev.highright96.upload.dto.ImageForm;
 import java.io.File;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
@@ -7,9 +8,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
@@ -38,5 +42,13 @@ public class SpringUploadController {
             file.transferTo(new File(fullPath));
         }
         return "upload/upload-form";
+    }
+
+    @ResponseBody
+    @PostMapping("/upload/test")
+    public void saveFile(@ModelAttribute ImageForm imageForm) {
+        log.info("ItemId={}", imageForm.getItemId());
+        log.info("temName={}", imageForm.getItemName());
+        log.info("Image={}", imageForm.getImage());
     }
 }
