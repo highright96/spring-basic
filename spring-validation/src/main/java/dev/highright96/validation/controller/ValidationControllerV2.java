@@ -1,6 +1,7 @@
 package dev.highright96.validation.controller;
 
-import dev.highright96.springvalidation.validator.ItemValidator;
+import dev.highright96.validation.dto.Item;
+import dev.highright96.validation.validator.ItemRequestValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/validation-v2")
 public class ValidationControllerV2 {
 
-    private final ItemValidator itemValidator;
+    private final ItemRequestValidator itemValidator;
 
     @InitBinder
     public void init(WebDataBinder dataBinder) {
